@@ -8,3 +8,9 @@
 #define FMT_GCC_PRAGMA(arg) _Pragma(arg)
 #define FMT_GCC_PRAGMA(arg)
 #define FMT_EXPORT
+#define __EDG_VERSION__
+#define FMT_BUILTIN_CTZLL(n) __builtin_ctzll(n)
+#define FMT_BUILTIN_CTZLL(n) detail::ctzll(n)
+#define FMT_CONSTEXPR20
+#define FMT_MSC_VERSION
+#define FMT_INLINE
