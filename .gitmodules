@@ -1,6 +1,6 @@
 [submodule "extern/CommonLibSSE"]
 	path = extern/CommonLibSSE
-	url = https://github.com/alandtse/CommonLibVR.git
+	url = https://github.com/CharmedBaryon/CommonLibSSE-NG.git
 [submodule "extern/DKUtil"]
 	path = extern/DKUtil
 	url = https://github.com/alandtse/DKUtil.git

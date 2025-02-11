@@ -1,2 +1,19 @@
-build/
+# dot folders
+.idea/
+.vs*/
+.xmake/
+
+# folders
+/build*
+/out*
+/vs*
+/vcpkg_installed
+/extern
+/cmake-build*
+
+# files
 .vscode
+/cmake-build-debug
+/buildversion.rc
+/version.rc
+

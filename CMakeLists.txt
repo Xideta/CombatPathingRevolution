@@ -1,4 +1,12 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.22)
+
+# info
+project(
+		CombatPathingRevolution
+		VERSION 0.30.2
+		DESCRIPTION "An attempt at NG'ifying"
+		LANGUAGES CXX
+)
 
 # standards & flags
 set(CMAKE_CXX_STANDARD 23)
@@ -10,45 +18,7 @@ set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CAC
 
 include(GNUInstallDirs)
 
-# info
-project(
-	CombatPathingRevolution
-	VERSION 0.30.1
-	LANGUAGES CXX
-)
 
-# out-of-source builds only
-if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
-	message(FATAL_ERROR "In-source builds are not allowed.")
-endif()
-
-# in-place configuration
-configure_file(
-	${CMAKE_CURRENT_SOURCE_DIR}/cmake/Version.h.in
-	${CMAKE_CURRENT_BINARY_DIR}/include/Version.h
-	@ONLY
-)
-
-configure_file(
-	${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.rc.in
-	${CMAKE_CURRENT_BINARY_DIR}/version.rc
-	@ONLY
-)
-
-# source files
-execute_process(COMMAND powershell -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "SOURCEGEN" "${PROJECT_VERSION}" "${CMAKE_CURRENT_BINARY_DIR}")
-include(${CMAKE_CURRENT_BINARY_DIR}/sourcelist.cmake)
-source_group(
-	TREE
-	${CMAKE_CURRENT_SOURCE_DIR}
-	FILES
-	${SOURCES}
-)
-
-source_group(
-	TREE ${CMAKE_CURRENT_BINARY_DIR}
-	FILES ${CMAKE_CURRENT_BINARY_DIR}/include/Version.h
-)
 
 # dependency macros
 macro(find_dependency_path DEPENDENCY FILE)
@@ -80,18 +50,40 @@ macro(find_dependency_path DEPENDENCY FILE)
 	endif()
 endmacro()
 
+# out-of-source builds only
+if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
+	message(FATAL_ERROR "In-source builds are not allowed.")
+endif()
+
+# in-place configuration
+configure_file(
+	${CMAKE_CURRENT_SOURCE_DIR}/cmake/version.rc.in
+	${CMAKE_CURRENT_BINARY_DIR}/version.rc
+	@ONLY
+)
+
+# source files
+execute_process(COMMAND powershell -ExecutionPolicy Bypass -File "${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "SOURCEGEN" "${PROJECT_VERSION}" "${CMAKE_CURRENT_BINARY_DIR}")
+include(${CMAKE_CURRENT_BINARY_DIR}/sourcelist.cmake)
+source_group(
+	TREE
+	${CMAKE_CURRENT_SOURCE_DIR}
+	FILES
+	${SOURCES}
+)
+
 # dependencies
-find_dependency_path(CommonLibSSE include/REL/Relocation.h)
+find_package(CommonLibSSE CONFIG REQUIRED)
 find_dependency_path(DKUtil include/DKUtil/Config.hpp)
 find_package(spdlog CONFIG REQUIRED)
 
 # cmake target
 # runtime
-add_library(
+ADD_COMMONLIBSSE_PLUGIN(
 	${PROJECT_NAME}
-	SHARED
+	AUTHOR "Maxsu"
+	SOURCES
 	${SOURCES}
-	${CMAKE_CURRENT_BINARY_DIR}/include/Version.h
 	${CMAKE_CURRENT_BINARY_DIR}/version.rc
 	.clang-format
 	vcpkg.json
@@ -113,6 +105,7 @@ target_link_libraries(
 	CommonLibSSE::CommonLibSSE
 	DKUtil::DKUtil
 	spdlog::spdlog
+
 )
 
 # compiler def
@@ -122,6 +115,9 @@ if(MSVC)
 	target_compile_options(
 		${PROJECT_NAME}
 		PRIVATE
+		/sdl             # Enable Additional Security Checks
+		/utf-8           # Set Source and Executable character sets to UTF-8
+		/Zi              # Debug Information Format
 		/MP
 		/await
 		/W0
@@ -147,6 +143,15 @@ if(MSVC)
 		/Zc:trigraphs
 		/Zc:wchar_t
 		/wd4200 # nonstandard extension used : zero-sized array in struct/union
+		"$<$<CONFIG:DEBUG>:>"
+		"$<$<CONFIG:RELEASE>:/Zc:inline;/JMC-;/Ob3>"
+	)
+
+	target_link_options(
+		${PROJECT_NAME}
+		PRIVATE
+			"$<$<CONFIG:DEBUG>:/INCREMENTAL;/OPT:NOREF;/OPT:NOICF>"
+			"$<$<CONFIG:RELEASE>:/INCREMENTAL:NO;/OPT:REF;/OPT:ICF;/DEBUG:FULL>"
 	)
 endif()
 
@@ -163,7 +168,7 @@ add_custom_command(
 	${PROJECT_NAME}
 	POST_BUILD
 	COMMAND
-	powershell -NoProfile -ExecutionPolicy Bypass -File " ${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "COPY" "${PROJECT_VERSION}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(ConfigurationName)" "${PROJECT_NAME}" "${ANNIVERSARY_EDITION} "
+	powershell -NoProfile -ExecutionPolicy Bypass -File " ${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "COPY" "${PROJECT_VERSION}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$$(ConfigurationName)" "${PROJECT_NAME}" "${ANNIVERSARY_EDITION} "
 	COMMENT
 	" Updating project :))"
 )

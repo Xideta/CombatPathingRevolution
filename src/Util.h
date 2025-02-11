@@ -27,3 +27,13 @@ namespace CombatPathing
 
 	Character* CombatAI__get_me();
 }
+
+namespace ActorExtension
+{
+	static const float GetBoundRadius(const RE::Actor *actor)
+	{
+		using func_t = decltype(&ActorExtension::GetBoundRadius);
+		REL::Relocation<func_t> func{ RELOCATION_ID(36444, 37439) };
+		return func(actor);
+	}
+}

@@ -26,7 +26,8 @@ namespace CombatPathing
 					if (me->GetGraphVariableFloat(CIRCLING_MIN_DIST_GV, circlingDistMin) && me->GetGraphVariableFloat(CIRCLING_MAX_DIST_GV, circlingDistMax)) {
 						auto optimalWeapRange = GetEquippementRange(rtm.combatController->inventory);
 						auto maxWeapRange = GetEquippementRange(rtm.combatController->inventory, true);
-						auto distance = me->GetPosition().GetDistance(he->GetPosition()) - he->GetBoundRadius();
+						
+						auto distance = me->GetPosition().GetDistance(he->GetPosition()) - ActorExtension::GetBoundRadius(he);
 						circlingDistMin += circlingDistMin > 0.f ? optimalWeapRange : 0.f;
 						circlingDistMax += maxWeapRange;
 
@@ -55,7 +56,7 @@ namespace CombatPathing
 		auto nodeCirlce = RE::NodeCloseMovementCircle::createnew();
 		if (nodeCirlce) {
 			NodeArray array;
-			RE::TreeCtors_extradata extraData;
+			RE::TreeCtors_extradata extraData{};
 			extraData.func1 = ShouldCircle;
 			extraData.func2 = nullptr;
 

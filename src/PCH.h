@@ -15,8 +15,8 @@
 #include <cstdarg>
 #include <cstddef>
 #include <cstdint>
-#include <cstdio>
 #include <cstdlib>
+#include <cstdio>
 #include <cstring>
 #include <ctime>
 #include <cuchar>
@@ -68,8 +68,8 @@
 #include <queue>
 #include <random>
 #include <ranges>
-#include <ratio>
 #include <regex>
+#include <ratio>
 #include <scoped_allocator>
 #include <semaphore>
 #include <set>
@@ -86,9 +86,9 @@
 #include <system_error>
 #include <thread>
 #include <tuple>
-#include <type_traits>
 #include <typeindex>
 #include <typeinfo>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -102,19 +102,20 @@ using Random = effolkronium::random_static;
 
 // clib
 #include <RE/Skyrim.h>
-#include <REL/Relocation.h>
 #include <SKSE/SKSE.h>
+#include <REL/Relocation.h>
 
 // winnt
-#include <Psapi.h>
 #include <ShlObj_core.h>
 #include <Windows.h>
+#include <Psapi.h>
+#undef cdecl  // Workaround for Clang 14 CMake configure error.
+
+#define DLLEXPORT extern "C" [[maybe_unused]] __declspec(dllexport)
 
 using namespace std::literals;
 using namespace REL::literals;
 
-// Version
-#include "Version.h"
 
 // DKUtil
 #include "DKUtil/Logger.hpp"
@@ -126,5 +127,3 @@ T _generic_foo(Args... args)
 	REL::Relocation<func_t> func{ REL::ID(id) };
 	return func(std::forward<Args>(args)...);
 }
-
-#define DLLEXPORT extern "C" [[maybe_unused]] __declspec(dllexport)

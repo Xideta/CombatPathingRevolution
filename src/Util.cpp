@@ -14,7 +14,7 @@ namespace CombatPathing
 		auto combatCtrl = a_actor->GetActorRuntimeData().combatController;
 		auto CombatInv = combatCtrl ? combatCtrl->inventory : nullptr;
 		if (CombatInv) {
-			for (const auto item : CombatInv->equippedItems) {
+			for (const auto& item : CombatInv->equippedItems) {
 				if (item.item) {
 					switch (item.item->GetType()) {
 					case TYPE::kMagic:

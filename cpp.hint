@@ -1,0 +1,10 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define DLLEXPORT extern "C" [[maybe_unused]] __declspec(dllexport)
+#define SKYRIM_REL
+#define SKYRIM_REL_VR
+#define FMT_CONSTEXPR
+#define FMT_GCC_PRAGMA(arg) _Pragma(arg)
+#define FMT_GCC_PRAGMA(arg)
+#define FMT_EXPORT
