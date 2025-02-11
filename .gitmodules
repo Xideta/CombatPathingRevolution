@@ -3,4 +3,4 @@
 	url = https://github.com/CharmedBaryon/CommonLibSSE-NG.git
 [submodule "extern/DKUtil"]
 	path = extern/DKUtil
-	url = https://github.com/alandtse/DKUtil.git
+	url = https://github.com/Xideta/DKUtil.git
