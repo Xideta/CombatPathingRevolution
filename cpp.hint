@@ -14,3 +14,27 @@
 #define FMT_CONSTEXPR20
 #define FMT_MSC_VERSION
 #define FMT_INLINE
+#define FMT_ENABLE_IF(__VA_ARGS__)
+#define FMT_ENABLE_IF(__VA_ARGS__) fmt::enable_if_t<(__VA_ARGS__), int> = 0
+#define FMT_BUILTIN_CTZ(n) __builtin_ctz(n)
+#define FMT_BUILTIN_CTZ(n) detail::ctz(n)
+#define FMT_MAYBE_UNUSED [[maybe_unused]]
+#define FMT_MAYBE_UNUSED
+#define FMT_API __declspec(dllexport)
+#define FMT_API __declspec(dllimport)
+#define FMT_API FMT_VISIBILITY("default")
+#define FMT_API
+#define FMT_ICC_VERSION
+#define FMT_HAS_BUILTIN(x) __has_builtin(x)
+#define FMT_HAS_BUILTIN(x)
+#define FMT_BEGIN_NAMESPACE namespace fmt { inline namespace v11 {
+#define FMT_THROW(x) detail::do_throw(x)
+#define FMT_THROW(x)
+#define FMT_THROW(x) ::fmt::detail::assert_fail(__FILE__, __LINE__, (x).what())
+#define FMT_HAS_FEATURE(x) __has_feature(x)
+#define FMT_HAS_FEATURE(x)
+#define FMT_USE_USER_DEFINED_LITERALS
+#define FMT_REDUCE_INT_INSTANTIATIONS
+#define FMT_HAS_CPP17_ATTRIBUTE(attribute) (FMT_CPLUSPLUS >= 201703L && FMT_HAS_CPP_ATTRIBUTE(attribute))
+#define FMT_GCC_VERSION (__GNUC__ * 100 + __GNUC_MINOR__)
+#define FMT_GCC_VERSION
