@@ -47,8 +47,7 @@ git submodule update
 ### SSE/AE/VR
 
 ```
-cmake --preset ALL
-cmake --build build --config Release
+Open in Visual Studio and hit Build->Build All.
 ```
 
 ## License
