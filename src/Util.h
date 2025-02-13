@@ -30,9 +30,9 @@ namespace CombatPathing
 
 namespace ActorExtension
 {
-	static const float GetBoundRadius(const RE::Actor *actor)
+	static inline const float GetBoundRadius(const RE::Actor *actor)
 	{
-		using func_t = decltype(&ActorExtension::GetBoundRadius);
+		using func_t = decltype(&GetBoundRadius);
 		REL::Relocation<func_t> func{ RELOCATION_ID(36444, 37439) };
 		return func(actor);
 	}

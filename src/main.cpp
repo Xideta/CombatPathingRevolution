@@ -10,11 +10,6 @@ using namespace SKSE;
 using namespace SKSE::log;
 
 SKSEPluginLoad(const LoadInterface* skse){
-#ifndef NDEBUG
-	while (!IsDebuggerPresent()) {
-		Sleep(100);
-	}
-#endif
 
 	auto* plugin = SKSE::PluginDeclaration::GetSingleton();
 	auto pName = plugin->GetName();

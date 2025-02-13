@@ -50,6 +50,10 @@ macro(find_dependency_path DEPENDENCY FILE)
 	endif()
 endmacro()
 
+#pdb
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
+set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF")
+
 # out-of-source builds only
 if(${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
 	message(FATAL_ERROR "In-source builds are not allowed.")
@@ -144,13 +148,6 @@ if(MSVC)
 		/Zc:wchar_t
 		/wd4200 # nonstandard extension used : zero-sized array in struct/union
 	)
-
-	target_link_options(
-		${PROJECT_NAME}
-		PRIVATE
-			"$<$<CONFIG:DEBUG>:/INCREMENTAL;/OPT:NOREF;/OPT:NOICF>"
-			"$<$<CONFIG:RELEASE>:/INCREMENTAL:NO;/OPT:REF;/OPT:ICF;/DEBUG:FULL>"
-	)
 endif()
 
 # PCH
@@ -161,25 +158,25 @@ target_precompile_headers(
 )
 
 # post build event
-add_custom_command(
-	TARGET
-	${PROJECT_NAME}
-	POST_BUILD
-	COMMAND
-	powershell -NoProfile -ExecutionPolicy Bypass -File " ${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "COPY" "${PROJECT_VERSION}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$$(ConfigurationName)" "${PROJECT_NAME}" "${ANNIVERSARY_EDITION} "
-	COMMENT
-	" Updating project :))"
-)
+#add_custom_command(
+#	TARGET
+#	${PROJECT_NAME}
+#	POST_BUILD
+#	COMMAND
+#	powershell -NoProfile -ExecutionPolicy Bypass -File " ${CMAKE_CURRENT_SOURCE_DIR}/!Update.ps1" "COPY" "${PROJECT_VERSION}" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$$(ConfigurationName)" "${PROJECT_NAME}" "${ANNIVERSARY_EDITION} "
+#	COMMENT
+#	" Updating project :))"
+#)
 
 # called via !Rebuild.ps1
-if(DEFINED GROUP)
-	set_target_properties(
-		${PROJECT_NAME}
-		PROPERTIES
-		FOLDER
-		${GROUP}
-	)
-endif()
+#if(DEFINED GROUP)
+#	set_target_properties(
+#		${PROJECT_NAME}
+#		PROPERTIES
+#		FOLDER
+#		${GROUP}
+#	)
+#endif()
 
 # https://gitlab.kitware.com/cmake/cmake/-/issues/24922#note_1371990
 if(MSVC_VERSION GREATER_EQUAL 1936 AND MSVC_IDE) # 17.6+

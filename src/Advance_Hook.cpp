@@ -14,7 +14,7 @@ namespace CombatPathing
 
 	void AdvanceRadiusHook::RecalculateAdvanceRadius(bool a_fullRadius, float* a_radius, float a_delta, RE::Actor* a_target, RE::Actor* a_attacker)
 	{
-		if (!a_radius || !a_target || !a_attacker || !IsMeleeOnly(a_attacker))
+		if (!a_radius || !a_target || !IsMeleeOnly(a_attacker))
 			return;
 
 		bool enableAdvanceRadius;
@@ -36,15 +36,14 @@ namespace CombatPathing
 		}
 	}
 
-	void AdvanceInterruptHook::Update(char** context)
+	void AdvanceInterruptHook::Update(PathingContext** context)
 	{
 		static constexpr char INTERRUPT_ACTION_GV[] = "CPR_InterruptAction";
 		auto me = CombatAI__get_me();
 		if (me) {
 			bool enableAdvanceRadius = false, interruptAction = false;
 			if (me->GetGraphVariableBool(INTERRUPT_ACTION_GV, interruptAction) && interruptAction && me->GetGraphVariableBool(ENABLE_RADIUS_GV, enableAdvanceRadius) && enableAdvanceRadius) {
-				char* path = *context;
-				*(path + 0x14) = 5;
+				(*context)->action = PathingContext::ActionType::kInterrupt;
 			}
 
 			if (interruptAction)
